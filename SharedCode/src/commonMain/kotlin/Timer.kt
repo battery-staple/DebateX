@@ -32,6 +32,20 @@ class Timer(var totalTime: TimeSpan) {
             currentTime = totalTime * (1 - value)
         }
 
+    val progressTopColor: Color
+        get() = colorFromHSV(
+            hue = progressProportion,
+            saturation = 1.0,
+            value = 0.6
+        )
+
+    val progressBottomColor: Color
+        get() = colorFromHSV(
+            hue = progressProportion,
+            saturation = 1.0,
+            value = 0.75
+        )
+
     fun start() {
         isRunning = true
     }
