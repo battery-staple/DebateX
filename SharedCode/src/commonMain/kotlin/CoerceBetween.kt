@@ -9,7 +9,7 @@ import kotlin.reflect.KProperty
  * an error will be thrown or it will be coerced into the range depending
  * on the [throwIfOutOfRange] flag.
  */
-class CoerceInRange<in Reference, Parameter : Comparable<Parameter>>(
+class CoerceBetween<in Reference, Parameter : Comparable<Parameter>>(
     initialValue: Parameter,
     private val lowerBound: Parameter,
     private val upperBound: Parameter,
