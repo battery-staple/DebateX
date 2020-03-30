@@ -2,12 +2,19 @@ package com.jetbrains.debatex
 
 import kotlin.math.abs
 
-data class Color(
-    var red: Double,
-    var green: Double,
-    var blue: Double,
-    var alpha: Double = 1.0
+class Color(
+    red: Double,
+    green: Double,
+    blue: Double,
+    alpha: Double = 1.0
 ) {
+
+    var red: Double by coerceInZeroToOne(red)
+    var green: Double by coerceInZeroToOne(green)
+    var blue: Double by coerceInZeroToOne(blue)
+    var alpha: Double by coerceInZeroToOne(alpha)
+
+
     private val greatestRGB
         get() = maxOf(red, green, blue)
 
@@ -57,6 +64,13 @@ data class Color(
             else -> throw IllegalStateException("Color mutated while calculating hue.")
         } / 6
 }
+
+private fun <Reference : Any> coerceInZeroToOne(
+    initialValue: Double,
+    throwIfOutOfRange: Boolean = false
+): CoerceBetween<Reference, Double> =
+    CoerceBetween(initialValue, 0.0, 1.0, throwIfOutOfRange)
+
 
 fun colorFromHSV(
     hue: Double,
