@@ -1,4 +1,4 @@
-package com.jetbrains.debatex
+package com.rohengiralt.debatex
 
 class xkcdException : IllegalStateException(
     """
