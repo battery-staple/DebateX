@@ -1,55 +1,47 @@
 package com.rohengiralt.debatex.viewModel.event
 
-import com.rohengiralt.debatex.Configurable
-import com.rohengiralt.debatex.dataStructure.Size.ScreenDimension.*
-import com.rohengiralt.debatex.dataStructure.text.Alignment
-import com.rohengiralt.debatex.dataStructure.text.FontWeight
-import com.rohengiralt.debatex.dataStructure.text.Text
-import com.rohengiralt.debatex.dataStructure.text.textSize
-import com.rohengiralt.debatex.datafetch.DataFetcher
-import com.rohengiralt.debatex.model.event.EventModel
-import com.rohengiralt.debatex.viewModel.CardViewModel
-import com.rohengiralt.debatex.viewModel.Linked
+import com.rohengiralt.debatex.dataStructure.Image
+import com.rohengiralt.debatex.viewModel.ViewModel
+import com.rohengiralt.debatex.viewModel.ViewModelOnly
 
-class EventCardViewModel internal constructor(
-    override val link: EventViewModel<*>,
-    override val modelFetcher: DataFetcher<EventModel<*>>
-) : Linked<EventViewModel<*>>,
-    CardViewModel<EventModel<*>>(
-        title = @Configurable Text(
-            rawText = link.untaggedName.shortNameOrLong,
-            fontWeight = FontWeight.VeryBold,
-            height = textSize(
-                screenProportion = 0.2,
-                screenDimension = OrientationBased.Horizontal
-            )
-        ),
-        cornerRadius = @Configurable 25.0
-    ) {
+@ViewModelOnly
+abstract class EventCardViewModel : ViewModel() {
+    abstract val title: String
+    abstract val subtitle: String
+    abstract val favorited: Boolean
+    abstract val body: String
+    abstract val captionedImages: List<CaptionedImage>?
+    abstract var showingInfo: Boolean
 
-    @Suppress("UNUSED")
-    val subtitle: Text =
-        Text(
-            rawText = model.tags.joinToString(separator = "\n") { it.representableName },
-            alignment = Alignment.Center,
-            height = textSize(
-                screenProportion = 0.06,
-                screenDimension = OrientationBased.Horizontal
-            )
-        )
+    abstract fun open()
 
-    @Suppress("UNUSED")
-    val body: Text =
-        Text(
-            rawText = model.pageFetchers.joinToString(separator = "-") {
-                it.fetch().timerFetcher.fetch().totalTime.timeSpan.minutes.toString().removeSuffix(".0")
-            },
-            fontWeight = FontWeight.SlightlyBold,
-            height = textSize(
-                screenProportion = 0.1,
-                screenDimension = OrientationBased.Horizontal
-            )
-        )
-
-//    val image = model.
+    data class CaptionedImage(val image: Image, val caption: String?)
 }
+
+//@ViewModelOnly
+//class CompetitorsTimingsEventCardViewModel(val model: CompetitorsTimingsEventCardModel, val sectionViewModel: EventsSectionViewModel) : EventCardViewModel() {
+//    override val title: String = model.name
+//    override val subtitle: String = model.tags.joinToString("\n") { "($it)" }
+//    override val favorited: Boolean by observationHandler.published(false) //TODO: Store
+//    override val body: String = model.timings.joinToString("-") { it.minutes.toInt().toString() }
+//    override val captionedImages: Pair<Image, Image>? = when (model.competitionType) {
+//        OneVOneSpeaker -> (AssetImage.Person.One.Green to model.) to AssetImage.Person.One.Red
+//        TwoVTwoSpeaker -> AssetImage.Person.Two.Green to AssetImage.Person.Two.Red
+////            CongressSpeaker -> AssetImage.Person.Many.Green to AssetImage.Person.Many.Red
+//        else -> null
+//    }
+//
+//    override fun open() {
+//        logger.info { "About to request to open" }
+//        sectionViewModel.open(this)
+//    }
+//
+//    override var showingInfo: Boolean by observationHandler.published(false, set = { value ->
+//        if (value) sectionViewModel.openInfo(this@CompetitorsTimingsEventCardViewModel)
+//        field = value
+//    })
+//
+//    companion object {
+//        private val logger = loggerForClass<CompetitorsTimingsEventCardViewModel>()
+//    }
+//}

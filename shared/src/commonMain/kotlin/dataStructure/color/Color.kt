@@ -1,9 +1,8 @@
 package com.rohengiralt.debatex.dataStructure.color
 
-import com.rohengiralt.debatex.dataStructure.DataStructure
 import kotlin.reflect.KClass
 
-interface Color : DataStructure {
+interface Color {
     val representation: ColorRepresentation
 
     fun <T : ColorRepresentation> representationAs(clazz: KClass<T>): T

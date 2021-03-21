@@ -247,15 +247,15 @@ internal fun String.toDouble(radix: Int): Double = toLong(radix).toDouble()
 
 internal expect val allColorRepresentations: List<KClass<out ColorRepresentation>>
 
-internal val colorRepresentationConstructors: Map<KClass<out ColorRepresentation>, (Double, Double, Double, Double) -> ColorRepresentation> =
-    mutableMapOf(
-        ColorRepresentation.RGB::class to { red, green, blue, alpha ->
-            ColorRepresentation.RGB(red, green, blue, alpha)
-        },
-        ColorRepresentation.HSV::class to { hue, saturation, value, alpha ->
-            ColorRepresentation.HSV(hue, saturation, value, alpha)
-        },
-        ColorRepresentation.HSL::class to { hue, saturation, lightness, alpha ->
-            ColorRepresentation.HSL(hue, saturation, lightness, alpha)
-        }
-    )
+//internal val colorRepresentationConstructors: Map<KClass<out ColorRepresentation>, (Double, Double, Double, Double) -> ColorRepresentation> =
+//    mutableMapOf(
+//        ColorRepresentation.RGB::class to { red, green, blue, alpha ->
+//            ColorRepresentation.RGB(red, green, blue, alpha)
+//        },
+//        ColorRepresentation.HSV::class to { hue, saturation, value, alpha ->
+//            ColorRepresentation.HSV(hue, saturation, value, alpha)
+//        },
+//        ColorRepresentation.HSL::class to { hue, saturation, lightness, alpha ->
+//            ColorRepresentation.HSL(hue, saturation, lightness, alpha)
+//        }
+//    )

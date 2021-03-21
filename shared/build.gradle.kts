@@ -1,15 +1,14 @@
 @file:Suppress("UNUSED_VARIABLE")
 
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.gradle.tasks.FatFrameworkTask
 import org.jetbrains.kotlin.gradle.plugin.mpp.Framework.BitcodeEmbeddingMode
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.tasks.FatFrameworkTask
 
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization") version "1.4.31"
     id("com.android.library")
-    id("kotlin-android-extensions")
-    kotlin("plugin.serialization") version "1.4.21"
+//    id("kotlin-android-extensions")
 }
 
 group = "com.rohengiralt"
@@ -18,29 +17,32 @@ version = "0.1.0"
 repositories {
     gradlePluginPortal()
     google()
-    jcenter()
     mavenCentral()
-//    maven {
-//        url = uri("https://dl.bintray.com/kotlin/kotlin-eap")
-//    }
+    jcenter()
     maven {
-        url = uri("https://dl.bintray.com/suparnatural/kotlin-multiplatform")
+        url = uri("https://dl.bintray.com/kotlin/kotlin-eap")
     }
+    maven { url = uri("https://dl.bintray.com/suparnatural/kotlin-multiplatform") }
+    maven { url = uri("https://dl.bintray.com/ekito/koin") }
 }
 
 val suparnaturalFsVersion: String = "1.0.10"
 val settingsVersion: String = "0.6.2"
-val serializationVersion: String = "1.0.1"
-val atomicfuVersion: String = "0.15.0"
-val mockkVersion = "1.10.0"
+val serializationVersion: String = "1.1.0"
+val atomicfuVersion: String = "0.15.1"
+val mockkVersion: String = "1.10.0"
+val koinVersion: String = "3.0.0-alpha-4"
+val coroutinesVersion: String = "1.4.3-native-mt"
 
 buildscript {
     dependencies {
         classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.14.3")
+        classpath("org.koin:koin-gradle-plugin:3.0.0-alpha-4")
     }
 }
 
 apply(plugin = "kotlinx-atomicfu")
+apply(plugin = "koin")
 
 kotlin {
     android()
@@ -63,6 +65,12 @@ kotlin {
                 implementation("com.russhwolf:multiplatform-settings-no-arg:$settingsVersion")
                 implementation("com.benasher44:uuid:0.2.0")
                 implementation("org.jetbrains.kotlinx:atomicfu:$atomicfuVersion")
+                implementation("org.koin:koin-core:$koinVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion") {
+                    version {
+                        strictly("$coroutinesVersion")
+                    }
+                }
 
 //                implementation("suparnatural-kotlin-multiplatform:fs-metadata:$suparnaturalFsVersion")
             }
@@ -78,6 +86,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation("androidx.core:core-ktx:1.3.2")
+//                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 //                implementation("suparnatural-kotlin-multiplatform:fs-android:$suparnaturalFsVersion")
             }
         }
@@ -106,6 +115,18 @@ kotlin {
             languageSettings.enableLanguageFeature("InlineClasses")
         }
     }
+
+    targets.all {
+        compilations.all {
+            @Suppress("SuspiciousCollectionReassignment")
+            kotlinOptions {
+                freeCompilerArgs += "-Xskip-prerelease-check"
+                freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+//                languageVersion = "1.5"
+//                apiVersion = "1.5"
+            }
+        }
+    }
 }
 
 android {
@@ -127,6 +148,7 @@ val skinnyFramework: Sync by tasks.creating(Sync::class) {
     group = "build"
 //    val mode = System.getenv("CONFIGURATION") ?: "DEBUG"
     val framework = kotlin.targets.getByName<KotlinNativeTarget>("iosArm64").binaries.getFramework(org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType.RELEASE)
+
 //    inputs.property("mode", mode)
     dependsOn(framework.linkTask)
     val targetDir = File(buildDir, "xcode-frameworks")
@@ -179,10 +201,4 @@ tasks.getByName("build").dependsOn(fatFramework)
 
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.4.2")
-}
-
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + "-Xskip-prerelease-check"
-    }
 }

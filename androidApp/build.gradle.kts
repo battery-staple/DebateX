@@ -3,7 +3,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("kotlin-android-extensions")
+//    id("kotlin-android-extensions")
 }
 group = "com.rohengiralt"
 version = "0.1.0"

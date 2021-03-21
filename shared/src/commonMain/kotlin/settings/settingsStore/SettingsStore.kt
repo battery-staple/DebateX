@@ -1,16 +1,6 @@
 package com.rohengiralt.debatex.settings.settingsStore
 
-import com.rohengiralt.debatex.defaultLogger
-import com.rohengiralt.debatex.settings.Setting
-import com.rohengiralt.debatex.settings.SettingType
-import com.rohengiralt.debatex.settings.getSerializable
-import com.rohengiralt.debatex.settings.putSerializable
-import com.russhwolf.settings.Settings
-import com.russhwolf.settings.set
-import kotlinx.serialization.KSerializer
-import kotlin.properties.PropertyDelegateProvider
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
+import kotlin.reflect.KClass
 
 interface SettingsStore {
     fun getIntOrNull(key: String): Int?
@@ -19,6 +9,16 @@ interface SettingsStore {
     fun getFloatOrNull(key: String): Float?
     fun getDoubleOrNull(key: String): Double?
     fun getBooleanOrNull(key: String): Boolean?
+
+    fun setInt(key: String, value: Int)
+    fun setLong(key: String, value: Long)
+    fun setString(key: String, value: String)
+    fun setFloat(key: String, value: Float)
+    fun setDouble(key: String, value: Double)
+    fun setBoolean(key: String, value: Boolean)
+
+    fun remove(key: String)
+    fun removeAll()
 
     fun getInt(key: String): Int =
         getIntOrNull(key) ?: throw IllegalArgumentException("No integer found with key $key")
@@ -39,32 +39,43 @@ interface SettingsStore {
         getBooleanOrNull(key) ?: throw IllegalArgumentException("No boolean found with key $key")
 }
 
-inline operator fun <reified T> SettingsStore.get(value: String): T {
-    @Suppress("UNCHECKED_CAST")
-    val getT: (String) -> T = when (val tClass = T::class) {
-        Int::class -> ::getInt
-        Long::class -> ::getLong
-        String::class -> ::getString
-        Float::class -> ::getFloat
-        Double::class -> ::getDouble
-        Boolean::class -> ::getBoolean
-        else -> throw UnsupportedOperationException("Type ${tClass.simpleName} is not supported for storage.")
-    } as (String) -> T
+inline operator fun <reified T : Any> SettingsStore.get(key: String): T = get(T::class, key)
 
-    return getT(value)
+operator fun <T : Any> SettingsStore.get(type: KClass<T>, key: String): T = when (type) {
+    Int::class -> ::getInt
+    Long::class -> ::getLong
+    String::class -> ::getString
+    Float::class -> ::getFloat
+    Double::class -> ::getDouble
+    Boolean::class -> ::getBoolean
+    else -> throw UnsupportedOperationException("Type ${type.simpleName} is not supported for storage.")
+}.invoke(key) as T
+
+fun <T : Any> SettingsStore.getOrNull(type: KClass<T>, key: String): T? = when (type) {
+    Int::class -> ::getIntOrNull
+    Long::class -> ::getLongOrNull
+    String::class -> ::getStringOrNull
+    Float::class -> ::getFloatOrNull
+    Double::class -> ::getDoubleOrNull
+    Boolean::class -> ::getBooleanOrNull
+    else -> { _ -> null }
+}.invoke(key) as T?
+
+inline fun <reified T : Any> SettingsStore.getOrNull(key: String): T? =
+    getOrNull(T::class, key)
+
+operator fun <T : Any> SettingsStore.set(type: KClass<T>, key: String, value: T) {
+    (when (type) {
+        Int::class -> ::setInt
+        Long::class -> ::setLong
+        String::class -> ::setString
+        Float::class -> ::setFloat
+        Double::class -> ::setDouble
+        Boolean::class -> ::setBoolean
+        else -> throw UnsupportedOperationException("Type ${type.simpleName} is not supported for storage.")
+    } as (String, T) -> Unit).invoke(key, value)
 }
 
-inline fun <reified T> SettingsStore.getOrNull(value: String): T? {
-    @Suppress("UNCHECKED_CAST")
-    val getT: (String) -> T? = when (T::class) {
-        Int::class -> ::getIntOrNull
-        Long::class -> ::getLongOrNull
-        String::class -> ::getStringOrNull
-        Float::class -> ::getFloatOrNull
-        Double::class -> ::getDoubleOrNull
-        Boolean::class -> ::getBooleanOrNull
-        else -> return null
-    } as (String) -> T?
-
-    return getT(value)
+inline operator fun <reified T : Any> SettingsStore.set(key: String, value: T) {
+    this[T::class, key] = value
 }

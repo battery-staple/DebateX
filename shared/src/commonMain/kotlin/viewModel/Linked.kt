@@ -1,5 +1,5 @@
 package com.rohengiralt.debatex.viewModel
 
-interface Linked<out T : ViewModel<*>> {
-    val link: T
-}
+//interface Linked<out T : OldViewModel<*>> {
+//    val link: T
+//}

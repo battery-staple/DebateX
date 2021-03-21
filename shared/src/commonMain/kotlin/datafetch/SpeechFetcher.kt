@@ -1,8 +1,5 @@
 package com.rohengiralt.debatex.datafetch
 
-import com.rohengiralt.debatex.dataStructure.Speaker
-import com.rohengiralt.debatex.model.speech.SpeechModel
-
 //val speeches: MutableList<SpeechModel<*>> = mutableListOf()
 //
 //class SpeechFetcher<T : Speaker<*>> : DataFetcher<SpeechModel<T>> {

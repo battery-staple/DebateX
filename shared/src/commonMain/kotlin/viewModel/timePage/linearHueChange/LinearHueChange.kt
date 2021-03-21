@@ -10,8 +10,6 @@ internal class LinearHueChange(
     jumpAtProgresses: List<Pair<Double, Double>>,
     jumpsAreFromEnd: Boolean = false
 ) : (Double) -> Double { //TODO: ensure in range [0,1]
-    //TODO: Fix for JS
-
     constructor(
         startHue: Double,
         endHue: Double
@@ -66,7 +64,7 @@ internal class LinearHueChange(
                     if (jump.progress > progress) break
                     else greatestJumpNotGreaterThanProgress = jump
                 }
-                return greatestJumpNotGreaterThanProgress.hue // TODO: Which block is this returning from?
+                greatestJumpNotGreaterThanProgress.hue
             }
             else -> DoubleLinearFunction(
                 Point.from(
@@ -83,7 +81,7 @@ internal class LinearHueChange(
 private val Pair<Double, Double>.progress
     @JvmName("getDoublePairProgress")
     get() = first
-val Pair<Double, Double>.hue
+val Pair<Double, Double>.hue: Double
     @JvmName("getDoublePairHue") get() = second
 
 private val Pair<TimeSpan, Double>.time

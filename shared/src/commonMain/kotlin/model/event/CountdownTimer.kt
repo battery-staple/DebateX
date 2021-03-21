@@ -3,7 +3,7 @@ package com.rohengiralt.debatex.model.event
 //import com.rohengiralt.debatex.model.TimePageModel
 //import com.rohengiralt.debatex.loggerForClass
 //import com.rohengiralt.debatex.model.CountdownTimerModel
-//import com.rohengiralt.debatex.model.TimerModel
+//import com.rohengiralt.debatex.model.timerModel.TimerModel
 //import com.rohengiralt.debatex.viewModel.ViewModel
 //import com.soywiz.klock.DateTime
 //import com.soywiz.klock.TimeSpan

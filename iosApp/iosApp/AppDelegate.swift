@@ -7,9 +7,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         UIApplication.shared.isIdleTimerDisabled = true
         
-        CommonKt.updateObservableObject = { object in
-            print("Updating...")
-            object.objectWillChange.send()
+        ViewModelKt.updateViewModel = { object in
+            object?.objectWillChange.send()
         }
         
         return true
