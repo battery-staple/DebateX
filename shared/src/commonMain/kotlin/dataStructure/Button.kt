@@ -1,8 +1,8 @@
-package com.rohengiralt.debatex.dataStructure
-
-import com.rohengiralt.debatex.viewModel.ViewModel
-
-class Button<out T : ViewModel<*>>(
-    val display: T,
-    val onClick: () -> Unit
-)
+//package com.rohengiralt.debatex.dataStructure
+//
+//import com.rohengiralt.debatex.viewModel.OldViewModel
+//
+//class Button<out T : OldViewModel<*>>(
+//    val display: T,
+//    val onClick: () -> Unit
+//)

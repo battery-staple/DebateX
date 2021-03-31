@@ -6,10 +6,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         UIApplication.shared.isIdleTimerDisabled = true
-        
-        CommonKt.updateObservableObject = { object in
-            print("Updating...")
-            object.objectWillChange.send()
+
+        KoinKt.doInitKoin()
+
+        ViewModelKt.updateViewModel = { object in
+            object?.objectWillChange.send()
         }
         
         return true

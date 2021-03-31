@@ -1,7 +1,7 @@
 package com.rohengiralt.debatex
 //
-//import com.rohengiralt.debatex.dataStructure.OneVOneSpeaker
-//import com.rohengiralt.debatex.dataStructure.Speaker
+//import com.rohengiralt.debatex.dataStructure.competitionTypes.OneVOneSpeaker
+//import com.rohengiralt.debatex.dataStructure.competitionTypes.Speaker
 //import com.rohengiralt.debatex.model.CountdownTimerModel
 //import com.rohengiralt.debatex.model.TimePageModel
 //import com.rohengiralt.debatex.model.event.*

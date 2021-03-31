@@ -2,65 +2,25 @@ package com.rohengiralt.debatex.model.event
 
 import com.benasher44.uuid.Uuid
 import com.benasher44.uuid.uuid4
-import com.rohengiralt.debatex.dataStructure.ShortenableName
-import com.rohengiralt.debatex.dataStructure.Speaker
-import com.rohengiralt.debatex.datafetch.ConstantModelFetcher
-import com.rohengiralt.debatex.datafetch.DataFetcher
-import com.rohengiralt.debatex.model.TimePageModel
+import com.rohengiralt.debatex.dataStructure.competitionTypes.Speaker
 import com.rohengiralt.debatex.model.Model
-import com.rohengiralt.debatex.model.UuidSerializer
+import com.rohengiralt.debatex.model.timerModel.TimerModel
+import com.rohengiralt.debatex.util.serializers.UuidSerializer
 import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmName
 
 @Serializable
-data class EventModel<out T : Speaker<*>>(
-    val type: DebateFormat<T>,
+data class EventModel<out T : Speaker>(
+    val format: DebateFormat<T>,
     val tags: EventTags = EventTags.NONE,
-    val overrideName: ShortenableName? = null,
-    val pageFetchers: List<DataFetcher<TimePageModel<T>>>,
-    val secondaryTimerModelFetchers: List<DataFetcher<SecondaryTimerModel<T>>>?,
-    val secondaryTimersAutomaticChangeMatchMode: SecondaryTimersAutomaticChangeMatchMode = SecondaryTimersAutomaticChangeMatchMode.All,
-    val favorited: Boolean = false,
+    val type: Speaker.Type<out T>,
+    val primaryTimers: List<TimerModel<T>>,
+    val secondaryTimers: List<TimerModel<T>>? = null,
+    val secondaryTimerChangeStrategy: SecondaryTimerChangeStrategy
 ) : Model() {
-    constructor(
-        type: DebateFormat<T>,
-        tags: EventTags = EventTags.NONE,
-        overrideName: ShortenableName? = null,
-        pageFetchers: List<DataFetcher<TimePageModel<T>>>,
-        secondaryTimerModels: List<SecondaryTimerModel<T>>?,
-        secondaryTimersAutomaticChangeMatchMode: SecondaryTimersAutomaticChangeMatchMode = SecondaryTimersAutomaticChangeMatchMode.All,
-        favorited: Boolean = false,
-        jvmConflictingOverloadsWorkaround: Unit = Unit
-    ) : this(
-        type, tags, overrideName, pageFetchers,
-        secondaryTimerModelFetchers = secondaryTimerModels?.map(::ConstantModelFetcher),
-        secondaryTimersAutomaticChangeMatchMode, favorited
-    )
-
-    constructor(
-        type: DebateFormat<T>,
-        tags: EventTags = EventTags.NONE,
-        overrideName: ShortenableName? = null,
-        pageFetchers: List<DataFetcher<TimePageModel<T>>>,
-        secondaryTimersAutomaticChangeMatchMode: SecondaryTimersAutomaticChangeMatchMode = SecondaryTimersAutomaticChangeMatchMode.All,
-        favorited: Boolean = false,
-        jvmConflictingOverloadsWorkaround: Unit = Unit,
-        jvmConflictingOverloadsWorkaround2: Unit = Unit
-    ) : this(
-        type,
-        tags,
-        overrideName,
-        pageFetchers,
-        secondaryTimerModelFetchers = null,
-        secondaryTimersAutomaticChangeMatchMode,
-        favorited
-    )
+    init {
+        require(primaryTimers.isNotEmpty()) { "Must have at least one primary timer." }
+    }
 
     @Serializable(with = UuidSerializer::class)
     val uuid: Uuid = uuid4()
-}
-
-@Serializable
-enum class SecondaryTimersAutomaticChangeMatchMode {
-    All, Any, Never
 }

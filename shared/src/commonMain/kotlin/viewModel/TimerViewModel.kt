@@ -1,36 +1,56 @@
 package com.rohengiralt.debatex.viewModel
 
-import com.rohengiralt.debatex.datafetch.ConstantModelFetcher
-import com.rohengiralt.debatex.datafetch.DataFetcher
-import com.rohengiralt.debatex.model.TimerModel
+import com.rohengiralt.debatex.dataStructure.ShortenableName
+import com.rohengiralt.debatex.loggerForClass
 import com.rohengiralt.debatex.model.event.Timer
+import com.rohengiralt.debatex.model.sectionModel.SettingModel
+import com.rohengiralt.debatex.model.timerModel.TimerCountStrategy
+import com.rohengiralt.debatex.model.timerModel.TimerModel
+import com.rohengiralt.debatex.viewModel.section.registerSetting
 import com.soywiz.klock.TimeSpan
 import kotlin.math.absoluteValue
 import kotlin.math.floor
 import kotlin.math.pow
+import kotlin.native.concurrent.ThreadLocal
 
 //TODO: Don't just define this here; get it from somewhere else
 private const val SECONDS_PER_MINUTE = 60
 
+
 class TimerViewModel(
-    override val modelFetcher: DataFetcher<TimerModel>,
+    model: TimerModel<*>,
     private val secondsDecimalPlaces: Int,
     private val minutesDigits: Int,
-    private val useAbsoluteValue: Boolean = false
-) : ViewModel<TimerModel>(), Timer by Timer(modelFetcher) {
+    private val useAbsoluteValue: Boolean = false,
+) : ViewModel() {
 
-/*//    init {
-//        Updater.start()
-//        logger.info("About to be about to be about to add this TimerViewModel to the updater.")
-//        runBlocking(Updater.listContext) {
-//            logger.info("About to add this TimerViewModel to the updater.")
-//            Updater.add(this@TimerViewModel)
-//            logger.info("Added this TimerViewModel to the updater.")
-//        }
-//    }
+    init {
+        countStrategySetting.addSubscriber(this)
+    }
 
-//    override var updating: Boolean = true //TODO: DELETE*/
+    private val timer = Timer(
+        model.totalTime.timeSpan,
+        countStrategy.option
+    ).also { it.addSubscriber(this) }
 
+    internal val totalTime = model.totalTime
+    internal val speakers = model.speakers
+
+    fun reset() {
+        isRunning = false
+        timer.reset()
+        observationHandler.publish()
+    }
+
+    val progress get() = timer.progress
+    var isRunning: Boolean by observationHandler.published(timer::isRunning, true)
+
+    private val currentTime inline get() = timer.currentTime
+
+    @Suppress("UNUSED")
+    val name: ShortenableName = model.name
+
+    @Suppress("UNUSED")
     val timeString: String
         get() {
             require(secondsDecimalPlaces >= 0) { "Number of decimal places must be nonnegative." }
@@ -78,30 +98,30 @@ class TimerViewModel(
     private inline fun Double.floor(decimalPlaces: Int): Double =
         floor(this * 10.0.pow(decimalPlaces)) / (10.0.pow(decimalPlaces))
 
-/*//    private object Updater : MutableList<TimerViewModel> by mutableListOf() {
-//        @InternalCoroutinesApi
-//        val listContext = MainLoopDispatcher + SupervisorJob()
-//
-//        private var started = false
-//
-//        @InternalCoroutinesApi
-//        @Suppress("NOTHING_TO_INLINE")
-//        inline fun start(): Unit {
-//            if (!started) runBlocking {
-//
-//                CoroutineScope(listContext).launch {
-//                    while (true) {
-//                        for (timer in this@Updater) {
-//                            timer.update()
-//                        }
-//                        delay(1000)
-//                    }
-//                }
-//            }
-//        }
-//    }*/
+    override fun update() {
+        super.update()
+        timer.strategy = countStrategy.option
+    }
 
-//    companion object {
-//        private val logger = loggerForClass<TimerViewModel>()
-//    }
+    @ThreadLocal
+    companion object {
+        private val countStrategySetting =
+            registerSetting(
+                "Timers Count",
+                SettingModel.SettingOptions.MultipleChoice(
+                    SettingModel.SettingOptions.MultipleChoice.MultipleChoiceOption(
+                        "Down", TimerCountStrategy.CountDown
+                    ),
+                    SettingModel.SettingOptions.MultipleChoice.MultipleChoiceOption(
+                        "Up", TimerCountStrategy.CountUp
+                    ),
+                    initialIndex = 0,
+                    serializer = TimerCountStrategy.serializer()
+                )
+            )
+
+        private val countStrategy: SettingModel.SettingOptions.MultipleChoice.MultipleChoiceOption<TimerCountStrategy> by countStrategySetting
+
+        private val logger = loggerForClass<TimerViewModel>()
+    }
 }

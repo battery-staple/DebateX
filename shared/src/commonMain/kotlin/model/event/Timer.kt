@@ -1,37 +1,103 @@
 package com.rohengiralt.debatex.model.event
 
-import com.rohengiralt.debatex.datafetch.DataFetcher
-import com.rohengiralt.debatex.model.TimerImpl
-import com.rohengiralt.debatex.model.TimerModel
+import com.rohengiralt.debatex.model.timerModel.TimerCountStrategy
+import com.rohengiralt.debatex.observation.Observable
+import com.rohengiralt.debatex.observation.Observer
+import com.rohengiralt.debatex.observation.WeakReferencePublisher
+import com.soywiz.klock.DateTime
 import com.soywiz.klock.TimeSpan
+import com.soywiz.klock.seconds
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
 //import kotlinx.serialization.KSerializer
 //import kotlinx.serialization.Polymorphic
 //import kotlinx.serialization.modules.SerialModule
 //import kotlinx.serialization.modules.SerializersModule
 
 //@Polymorphic
-interface Timer {
-    val totalTime: TimeSpan
-    val currentTime: TimeSpan
-    val isRunning: Boolean
-    val isEnabled: Boolean
-    val progress: Double
+//interface Timer {
+//    val totalTime: TimeSpan
+//    val currentTime: TimeSpan
+//    val isRunning: Boolean
+//    val isEnabled: Boolean
+//    val progress: Double
+//    val isOvertime: Boolean get() = progress > 1
+//
+//    fun start()
+//    fun stop()
+//    fun toggleRunning()
+////    fun disable()
+////    fun enable()
+////    fun toggleEnabled()
+//    fun reset()
+//    fun stopAndReset() {
+//        stop()
+//        reset()
+//    }
+//}
+
+class Timer private constructor(
+    private val totalTime: TimeSpan,
+    var strategy: TimerCountStrategy,
+    private val observationHandler: WeakReferencePublisher<Observer>,
+) : Observable<Observer> by observationHandler {
+    constructor(
+        totalTime: TimeSpan,
+        strategy: TimerCountStrategy,
+    ) : this(totalTime, strategy, WeakReferencePublisher())
+
+    private var updater: Job? = null
+
+    var isRunning: Boolean = false
+        set(startRunning) {
+            if (startRunning == field) return
+
+            if (startRunning) {
+                timeAtLastStart = DateTime.now()
+
+                updater = GlobalScope.launch(Dispatchers.Main) {
+                    while (true) {
+                        observationHandler.publish()
+                        delay(UPDATE_DELAY)
+                    }
+                }
+            } else {
+                elapsedTimeAtLastStop = elapsedTime
+                updater?.cancel()
+                updater = null
+            }
+            field = startRunning
+        }
+
+    private var elapsedTimeAtLastStop = 0.seconds
+    private var timeAtLastStart: DateTime = DateTime.now()
+
+    private val elapsedTime: TimeSpan
+        get() = elapsedTimeAtLastStop + runTimeSinceLastStop
+
+    private val runTimeSinceLastStop: TimeSpan
+        get() = if (isRunning) {
+            runTimeSinceLastStart
+        } else 0.seconds
+
+    private val runTimeSinceLastStart: TimeSpan get() = DateTime.now() - timeAtLastStart
+
+    val currentTime: TimeSpan get() = strategy.currentTimeAfter(elapsedTime, totalTime)
+    val progress: Double get() = strategy.progressAfter(elapsedTime, totalTime)
     val isOvertime: Boolean get() = progress > 1
 
-    fun start()
-    fun stop()
-    fun toggleRunning()
-//    fun disable()
-//    fun enable()
-//    fun toggleEnabled()
-    fun reset()
-    fun stopAndReset() {
-        stop()
-        reset()
+
+    fun reset() {
+        timeAtLastStart = DateTime.now()
+        elapsedTimeAtLastStop = 0.seconds
     }
 
     companion object {
-        operator fun invoke(modelFetcher: DataFetcher<TimerModel>): Timer = TimerImpl(modelFetcher)
+        private const val UPDATE_DELAY: Long = 100L
     }
 }
 
