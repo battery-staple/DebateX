@@ -2,7 +2,7 @@ package com.rohengiralt.debatex.dataStructure
 
 import kotlinx.serialization.Serializable
 
-interface Named { //TODO: Add polymorphic serializer
+interface Named { //TODO: Remove
     val name: String
 }
 

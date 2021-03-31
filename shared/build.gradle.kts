@@ -31,13 +31,14 @@ val settingsVersion: String = "0.6.2"
 val serializationVersion: String = "1.1.0"
 val atomicfuVersion: String = "0.15.1"
 val mockkVersion: String = "1.10.0"
-val koinVersion: String = "3.0.0-alpha-4"
+val koinVersion: String = "3.0.1-beta-2"
 val coroutinesVersion: String = "1.4.3-native-mt"
+val klockVersion: String = "2.0.7"
 
 buildscript {
     dependencies {
         classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.14.3")
-        classpath("org.koin:koin-gradle-plugin:3.0.0-alpha-4")
+        classpath("io.insert-koin:koin-gradle-plugin:3.0.1-beta-2")
     }
 }
 
@@ -61,17 +62,16 @@ kotlin {
             dependencies {
                 implementation(kotlin("reflect"))
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
-                implementation("com.soywiz.korlibs.klock:klock:2.0.0-alpha-1")
+                implementation("com.soywiz.korlibs.klock:klock:$klockVersion")
                 implementation("com.russhwolf:multiplatform-settings-no-arg:$settingsVersion")
                 implementation("com.benasher44:uuid:0.2.0")
                 implementation("org.jetbrains.kotlinx:atomicfu:$atomicfuVersion")
-                implementation("org.koin:koin-core:$koinVersion")
+                implementation("io.insert-koin:koin-core:$koinVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion") {
                     version {
-                        strictly("$coroutinesVersion")
+                        strictly(coroutinesVersion)
                     }
                 }
-
 //                implementation("suparnatural-kotlin-multiplatform:fs-metadata:$suparnaturalFsVersion")
             }
         }
@@ -81,11 +81,13 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
                 implementation("io.mockk:mockk-common:$mockkVersion")
                 implementation("com.russhwolf:multiplatform-settings-test:$settingsVersion")
+                implementation("io.insert-koin:koin-test:$koinVersion")
             }
         }
         val androidMain by getting {
             dependencies {
                 implementation("androidx.core:core-ktx:1.3.2")
+                implementation("com.soywiz.korlibs.klock:klock-jvm:$klockVersion")
 //                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 //                implementation("suparnatural-kotlin-multiplatform:fs-android:$suparnaturalFsVersion")
             }
@@ -94,6 +96,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("io.mockk:mockk:$mockkVersion")
+                implementation("io.insert-koin:koin-test-junit4:$koinVersion")
             }
         }
         val iosMain by getting

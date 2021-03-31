@@ -6,7 +6,7 @@ import com.rohengiralt.debatex.model.Model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TimerModel<T : Speaker>(
+data class TimerModel<out T : Speaker>(
     val name: ShortenableName,
     val totalTime: TimeSpanWrapper,
     val speakers: Set<T>,

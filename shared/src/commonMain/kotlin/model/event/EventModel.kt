@@ -9,14 +9,18 @@ import com.rohengiralt.debatex.util.serializers.UuidSerializer
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class EventModel<T : Speaker>(
+data class EventModel<out T : Speaker>(
     val format: DebateFormat<T>,
     val tags: EventTags = EventTags.NONE,
-    val type: Speaker.Type<T>,
+    val type: Speaker.Type<out T>,
     val primaryTimers: List<TimerModel<T>>,
     val secondaryTimers: List<TimerModel<T>>? = null,
     val secondaryTimerChangeStrategy: SecondaryTimerChangeStrategy
 ) : Model() {
+    init {
+        require(primaryTimers.isNotEmpty()) { "Must have at least one primary timer." }
+    }
+
     @Serializable(with = UuidSerializer::class)
     val uuid: Uuid = uuid4()
 }

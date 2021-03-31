@@ -16,7 +16,7 @@ import kotlin.native.concurrent.ThreadLocal
 //TODO: Don't just define this here; get it from somewhere else
 private const val SECONDS_PER_MINUTE = 60
 
-@ViewModelOnly
+
 class TimerViewModel(
     model: TimerModel<*>,
     private val secondsDecimalPlaces: Int,
@@ -98,8 +98,8 @@ class TimerViewModel(
     private inline fun Double.floor(decimalPlaces: Int): Double =
         floor(this * 10.0.pow(decimalPlaces)) / (10.0.pow(decimalPlaces))
 
-    override fun notify() {
-        super.notify()
+    override fun update() {
+        super.update()
         timer.strategy = countStrategy.option
     }
 

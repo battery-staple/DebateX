@@ -51,7 +51,8 @@ struct PrimaryEventTimerView: View {
                     VStack(spacing: (1 / 64.0).verticalProportionOf(proxy)) {
                         Text(viewModel.name.shortNameOrLong)
                             .frame(maxHeight: (3 / 32.0).verticalProportionOf(proxy))
-                                .font(.system(size: (3 / 32.0).verticalProportionOf(proxy), weight: .bold))
+                            .font(.system(size: (3 / 32.0).verticalProportionOf(proxy), weight: .bold))
+                            .foregroundColor(Color(white: 0.2))
 
                         Text(viewModel.timeString)
                             .foregroundColor(.black)

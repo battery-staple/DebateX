@@ -1,10 +1,12 @@
+@file:Suppress("UNUSED")
+
 package com.rohengiralt.debatex
 
 import kotlin.reflect.KClass
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun <T : Any> loggerForClass(clazz: KClass<out T>, customName: String? = null): Logger =
-    Logger((clazz.qualifiedName ?: "Anonymous class") + (customName ?: "")) //TODO: Remove qualifiedname for JS
+    Logger((clazz.qualifiedName ?: "Anonymous class") + (customName ?: ""))
 
 inline fun <reified T : Any> loggerForClass(customName: String? = null): Logger =
     loggerForClass(T::class, customName)

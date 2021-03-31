@@ -1,4 +1,4 @@
-package com.rohengiralt.debatex.viewModel.timePage.linearHueChange
+package com.rohengiralt.debatex.viewModel.event.linearHueChange
 
 import com.rohengiralt.debatex.propertyDelegates.Sorted
 import com.soywiz.klock.TimeSpan

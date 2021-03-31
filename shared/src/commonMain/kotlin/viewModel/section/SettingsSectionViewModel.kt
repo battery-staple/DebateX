@@ -8,17 +8,15 @@ import com.rohengiralt.debatex.observation.Observer
 import com.rohengiralt.debatex.observation.PassthroughPublisher
 import com.rohengiralt.debatex.observation.WeakReferencePublisher
 import com.rohengiralt.debatex.settings.SettingsAccess
-import com.rohengiralt.debatex.settings.settingsStore.RusshwolfSettingsStoreAdapter
 import com.rohengiralt.debatex.viewModel.ViewModel
-import com.rohengiralt.debatex.viewModel.ViewModelOnly
 import com.rohengiralt.debatex.viewModel.setting.SettingViewModel
-import com.russhwolf.settings.invoke
 import kotlinx.serialization.KSerializer
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import kotlin.native.concurrent.ThreadLocal
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
-import com.russhwolf.settings.Settings as RusshwolfSettings
 
 lateinit var applicationSettings: SettingsSectionModel
     private set
@@ -26,7 +24,6 @@ lateinit var applicationSettings: SettingsSectionModel
 interface ObservableSettingDelegate<in T, V> :
     PropertyDelegateProvider<T, ReadOnlyProperty<T, V>>, Observable<Observer>
 
-@OptIn(ViewModelOnly::class)
 fun <V> registerSetting(
     name: String,
     type: SettingModel.SettingOptions<V>,
@@ -47,9 +44,8 @@ fun <V> registerSetting(
 
 
 @ThreadLocal //TODO: make only on main thread?
-@ViewModelOnly
-object SettingsSectionViewModel : ViewModel() {
-    private val settingsAccess = SettingsAccess(/*TODO: Inject*/ RusshwolfSettingsStoreAdapter(RusshwolfSettings()))
+object SettingsSectionViewModel : ViewModel(), KoinComponent {
+    private val settingsAccess: SettingsAccess by inject()
 
     internal val model: SettingsSectionModel by lazy { applicationSettings } // static initialization order may cause a problem here
 //        SettingsSectionModel( //TODO: get from storage/inject

@@ -13,7 +13,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @OptIn(ExperimentalSerializationApi::class)
-@Serializable(with = TimeSpanWrapper.Companion::class)
+@Serializable(with = TimeSpanWrapper.Companion::class) //TODO: Replace with Klock wrapper
 data class TimeSpanWrapper(val timeSpan: TimeSpan) : Comparable<TimeSpan> {
     override fun compareTo(other: TimeSpan): Int = timeSpan.compareTo(other)
 

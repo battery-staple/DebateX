@@ -1,4 +1,4 @@
-package com.rohengiralt.debatex.viewModel.timePage.linearHueChange
+package com.rohengiralt.debatex.viewModel.event.linearHueChange
 
 interface LinearFunction<T, R> : (T) -> R
 

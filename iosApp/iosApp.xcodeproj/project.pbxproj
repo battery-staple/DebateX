@@ -18,7 +18,6 @@
 		B52280E024DA2B1E00B42E78 /* MainPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52280DF24DA2B1E00B42E78 /* MainPage.swift */; };
 		B542969625F981D200059F77 /* PrimaryEventTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B542969525F981D200059F77 /* PrimaryEventTimerView.swift */; };
 		B58B9080258C148600252C5D /* CommonInterop.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58B907F258C148600252C5D /* CommonInterop.swift */; };
-		B58B9088258C1A8100252C5D /* shared.framework in Resources */ = {isa = PBXBuildFile; fileRef = 7555FFB1242A642300829871 /* shared.framework */; };
 		B58B9095258C471A00252C5D /* SelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58B9094258C471A00252C5D /* SelectorView.swift */; };
 		B58B9099258C5D6200252C5D /* Collection+SafeSubscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58B9098258C5D6200252C5D /* Collection+SafeSubscript.swift */; };
 		B5A23E892590ECBE00622045 /* shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7555FFB1242A642300829871 /* shared.framework */; };
@@ -70,7 +69,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		7555FF7B242A565900829871 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7555FF7B242A565900829871 /* DebateX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DebateX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF7E242A565900829871 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7555FF80242A565900829871 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -145,7 +144,7 @@
 		7555FF7C242A565900829871 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7555FF7B242A565900829871 /* iosApp.app */,
+				7555FF7B242A565900829871 /* DebateX.app */,
 				7555FF91242A565B00829871 /* iosAppTests.xctest */,
 				7555FF9C242A565B00829871 /* iosAppUITests.xctest */,
 			);
@@ -237,7 +236,7 @@
 			);
 			name = iosApp;
 			productName = iosApp;
-			productReference = 7555FF7B242A565900829871 /* iosApp.app */;
+			productReference = 7555FF7B242A565900829871 /* DebateX.app */;
 			productType = "com.apple.product-type.application";
 		};
 		7555FF90242A565B00829871 /* iosAppTests */ = {
@@ -325,7 +324,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B58B9088258C1A8100252C5D /* shared.framework in Resources */,
 				7555FF8B242A565B00829871 /* LaunchScreen.storyboard in Resources */,
 				7555FF88242A565B00829871 /* Preview Assets.xcassets in Resources */,
 				7555FF85242A565B00829871 /* Assets.xcassets in Resources */,
@@ -561,8 +559,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
-				DEVELOPMENT_TEAM = G6T9NHUK5Z;
+				DEVELOPMENT_TEAM = 5PPY6R9XSZ;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/**";
 				INFOPLIST_FILE = iosApp/Info.plist;
@@ -571,11 +570,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rohengiralt.DebateX2;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				MARKETING_VERSION = 1.0.3;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rohengiralt.DebateX;
+				PRODUCT_NAME = DebateX;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = YES;
 			};
 			name = Debug;
@@ -585,8 +584,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
-				DEVELOPMENT_TEAM = G6T9NHUK5Z;
+				DEVELOPMENT_TEAM = 5PPY6R9XSZ;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/**";
 				INFOPLIST_FILE = iosApp/Info.plist;
@@ -595,11 +595,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rohengiralt.DebateX2;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				MARKETING_VERSION = 1.0.3;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rohengiralt.DebateX;
+				PRODUCT_NAME = DebateX;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = YES;
 			};
 			name = Release;

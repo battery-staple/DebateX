@@ -96,7 +96,7 @@ open class WeakReferencePublisher<O : Observer> : Publisher<O>() {
     private val subscribers: Iterable<O> get() = weakSubscribers.mapNotNull { it.value } + strongSubscribers
 
     override fun publish() {
-        subscribers.forEach { it.notify() }
+        subscribers.forEach { it.update() }
     }
 
     override fun addSubscriber(observer: O) {
@@ -130,5 +130,5 @@ open class PassthroughPublisher<O : Observer>(
     override fun publish() = publisher.publish()
 
     @Suppress("PublicApiImplicitType")
-    override fun notify() = publish()
+    override fun update() = publish()
 }

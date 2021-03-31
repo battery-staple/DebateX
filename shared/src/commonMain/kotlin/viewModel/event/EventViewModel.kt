@@ -8,12 +8,11 @@ import com.rohengiralt.debatex.loggerForClass
 import com.rohengiralt.debatex.model.event.EventModel
 import com.rohengiralt.debatex.viewModel.TimerViewModel
 import com.rohengiralt.debatex.viewModel.ViewModel
-import com.rohengiralt.debatex.viewModel.ViewModelOnly
-import com.rohengiralt.debatex.viewModel.timePage.linearHueChange.LinearHueChange
+import com.rohengiralt.debatex.viewModel.event.linearHueChange.LinearHueChange
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
 
-@ViewModelOnly
+
 abstract class EventViewModel : ViewModel() {
     abstract val title: String
     abstract val progress: Double
@@ -29,9 +28,8 @@ abstract class EventViewModel : ViewModel() {
     abstract fun stopAll()
 }
 
-@OptIn(ViewModelOnly::class)
 class BasicEventViewModel(
-    val model: EventModel<*>,
+    private val model: EventModel<*>,
 ) : EventViewModel() {
 
     override val title: String get() = model.format.name.longName + " " + model.tags.joinToString(separator = " ") { "(${it.representableName})" }
@@ -63,8 +61,8 @@ class BasicEventViewModel(
         onNewTimerSelected()
     }
 
-    override fun notify() {
-        super.notify()
+    override fun update() {
+        super.update()
 
         onNewTimerSelected()
 

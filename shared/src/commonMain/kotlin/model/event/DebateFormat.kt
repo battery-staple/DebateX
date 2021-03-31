@@ -7,9 +7,9 @@ import com.rohengiralt.debatex.dataStructure.competitionTypes.TwoVTwoSpeaker
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class DebateFormat<T : Speaker>(
+sealed class DebateFormat<out T : Speaker>(
     val name: ShortenableName,
-    val speakerType: Speaker.Type<T>
+    val speakerType: Speaker.Type<out T>
 ) {
     constructor(
         longName: String,

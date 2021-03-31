@@ -5,12 +5,6 @@ import com.rohengiralt.debatex.observation.Observer
 import com.rohengiralt.debatex.observation.PassthroughPublisher
 import com.rohengiralt.debatex.observation.WeakReferencePublisher
 
-@RequiresOptIn
-@Retention(AnnotationRetention.BINARY)
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
-internal annotation class ViewModelOnly
-
-@OptIn(ViewModelOnly::class)
 class ViewModelPublisher(val viewModel: ViewModel? /* needs to be passed in constructor, so may be null */) : WeakReferencePublisher<Observer>() {
     override fun publish() {
         super.publish()
@@ -18,7 +12,7 @@ class ViewModelPublisher(val viewModel: ViewModel? /* needs to be passed in cons
     }
 }
 
-@ViewModelOnly
+
 abstract class ViewModel : Observer, Observable<Observer> {
     protected open val observationHandler: PassthroughPublisher<Observer> =
         PassthroughPublisher(ViewModelPublisher(this))
@@ -26,8 +20,7 @@ abstract class ViewModel : Observer, Observable<Observer> {
     override fun addSubscriber(observer: Observer): Unit = observationHandler.addSubscriber(observer)
     override fun removeSubscriber(observer: Observer): Unit = observationHandler.removeSubscriber(observer)
 
-    override fun notify(): Unit = observationHandler.notify()
+    override fun update(): Unit = observationHandler.update()
 }
 
-@OptIn(ViewModelOnly::class)
 var updateViewModel: ViewModel?.() -> Unit = {} //TODO: InjectAtLaunch

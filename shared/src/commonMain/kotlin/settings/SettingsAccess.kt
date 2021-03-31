@@ -10,11 +10,9 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.StringFormat
 import kotlinx.serialization.json.Json
 import kotlin.properties.PropertyDelegateProvider
-import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
 
-open class SettingsAccess(private val settingStore: SettingsStore) {
+class SettingsAccess(private val settingStore: SettingsStore) {
     val allSettings: MutableList<Setting<*>> = mutableListOf()
 
     @Suppress("FunctionName")
@@ -29,14 +27,13 @@ open class SettingsAccess(private val settingStore: SettingsStore) {
         val name: String,
         val type: Type<T>,
         initialValue: T,
-        key: String? = null,
-    ) : ReadWriteProperty<SettingsAccess, T> {
+    ) {
 
         init {
             allSettings.add(this) //Unsafe leaking of this? TODO: Test
         }
 
-        private val key = key ?: name
+        private val key inline get() = name
 
         init {
             if (!settingStore.isInitialized(type, this.key)) {
@@ -50,11 +47,6 @@ open class SettingsAccess(private val settingStore: SettingsStore) {
         fun set(value: T) {
             settingLogger.info("Setting $name to $value from ${getOrNull() ?: "uninitialized"}.")
             settingStore[type, key] = value
-        }
-
-        override fun getValue(thisRef: SettingsAccess, property: KProperty<*>): T = get()
-        override fun setValue(thisRef: SettingsAccess, property: KProperty<*>, value: T) {
-            set(value)
         }
     }
 
