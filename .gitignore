@@ -1,70 +1,70 @@
-/.gradle
-/.idea
-/out
-/build
+.gradle/
+.idea/
+out
+build
 *.iml
 *.ipr
 *.iws
 
-### From https://github.com/github/gitignore/blob/master/Global/Xcode.gitignore
-## User settings
-#xcuserdata/
-#
-## compatibility with Xcode 8 and earlier
-#*.xcscmblueprint
-#*.xccheckout
-#
-## Gcc Patch
-#/*.gcno
-#
-### From https://github.com/github/gitignore/blob/master/Global/macOS.gitignore
-## General
-#.DS_Store
-#.AppleDouble
-#.LSOverride
-#Icon?
-#
-## Thumbnails
-#._*
-#
-## Files that might appear in the root of a volume
-#.DocumentRevisions-V100
-#.fseventsd
-#.Spotlight-V100
-#.TemporaryItems
-#.Trashes
-#.VolumeIcon.icns
-#.com.apple.timemachine.donotpresent
-#
-## Directories potentially created on remote AFP share
-#.AppleDB
-#.AppleDesktop
-#Network Trash Folder
-#Temporary Items
-#.apdisk
-#
-### From https://github.com/github/gitignore/blob/master/Global/Windows.gitignore
-## Windows thumbnail cache files
-#Thumbs.db
-#Thumbs.db:encryptable
-#ehthumbs.db
-#ehthumbs_vista.db
-#
-## Dump file
-#*.stackdump
-#
-## Folder config file
-#[Dd]esktop.ini
-#
-## Recycle Bin used on file shares
-#$RECYCLE.BIN/
-#
-## Windows Installer files
-#*.cab
-#*.msi
-#*.msix
-#*.msm
-#*.msp
-#
-## Windows shortcuts
-#*.lnk
+## From https://github.com/github/gitignore/blob/master/Global/Xcode.gitignore
+# User settings
+xcuserdata/
+
+# compatibility with Xcode 8 and earlier
+*.xcscmblueprint
+*.xccheckout
+
+# Gcc Patch
+/*.gcno
+
+## From https://github.com/github/gitignore/blob/master/Global/macOS.gitignore
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+## From https://github.com/github/gitignore/blob/master/Global/Windows.gitignore
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
