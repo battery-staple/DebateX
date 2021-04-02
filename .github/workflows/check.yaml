@@ -4,19 +4,19 @@ on: [push]
 
 jobs:
   print:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: print
         run: 'echo "print successful!"'
-  check:
-    runs-on: macos-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Check with Gradle
-        run: ./gradlew check
+#  check:
+#    runs-on: macos-latest
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Set up JDK 1.8
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: 1.8
+#      - name: Check with Gradle
+#        run: ./gradlew check
