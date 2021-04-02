@@ -3,12 +3,16 @@ name: check
 on: [push]
 
 jobs:
-  check:
+  print:
     runs-on: macos-latest
 
     steps:
       - name: print
         run: 'echo "print successful!"'
+  check:
+    runs-on: macos-latest
+
+    steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
