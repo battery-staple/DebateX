@@ -4,7 +4,6 @@ import com.rohengiralt.debatex.dataStructure.NonNullSelectableList
 import com.rohengiralt.debatex.dataStructure.color.Color
 import com.rohengiralt.debatex.dataStructure.color.ColorRepresentation
 import com.rohengiralt.debatex.dataStructure.color.SingleColor
-import com.rohengiralt.debatex.loggerForClass
 import com.rohengiralt.debatex.model.event.EventModel
 import com.rohengiralt.debatex.viewModel.TimerViewModel
 import com.rohengiralt.debatex.viewModel.ViewModel
@@ -56,14 +55,11 @@ class BasicEventViewModel(
         }?.let(::NonNullSelectableList)
     }
 
-    var x = mutableMapOf<Int, Int>()
-    fun a() {
-        x[0] = 3
-    }
-
     override var currentPageIndex: Int // cannot use property delegate here in order to avoid initializing primaryTimers
         get() = primaryTimers.currentIndex
-        set(value) { primaryTimers.currentIndex = value }
+        set(value) {
+            primaryTimers.currentIndex = value
+        }
 
     override var currentSecondaryTimerIndex: Int?
         get() = secondaryTimers?.currentIndex
@@ -148,8 +144,6 @@ class BasicEventViewModel(
         private const val BACKGROUND_SATURATION: Double = 0.8 // TODO: Get from config file
         private const val BACKGROUND_TOP_VALUE: Double = 0.75
         private const val BACKGROUND_BOTTOM_VALUE: Double = 0.4
-
-        private val logger = loggerForClass<BasicEventViewModel>()
     }
 }
 
