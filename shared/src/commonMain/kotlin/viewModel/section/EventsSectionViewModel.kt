@@ -7,6 +7,7 @@ import com.rohengiralt.debatex.dataStructure.competitionTypes.OneVOneSpeaker
 import com.rohengiralt.debatex.dataStructure.competitionTypes.Speaker
 import com.rohengiralt.debatex.dataStructure.competitionTypes.TwoVTwoSpeaker
 import com.rohengiralt.debatex.dataStructure.toNullableSelectable
+import com.rohengiralt.debatex.loggerForClass
 import com.rohengiralt.debatex.model.event.EventModel
 import com.rohengiralt.debatex.model.event.EventVariant
 import com.rohengiralt.debatex.model.sectionModel.EventsSectionModel
@@ -103,9 +104,21 @@ class EventsSectionViewModel : ViewModel(), KoinComponent {
     }
 
     val currentEvent: EventViewModel? get() = events.currentSelection.value
-    var showingEvent: Boolean by observationHandler.published(false)
+    var showingEvent: Boolean by observationHandler.published(
+        initialValue = false,
+        set = { value ->
+            if (value && currentEvent == null)
+                logger.warn("Cannot show event; no event to show.")
+            else
+                field = value
+        }
+    )
 
     val events: NullableSelectableList<EventViewModel> = model.eventModels.map {
         BasicEventViewModel(it)
     }.toNullableSelectable().also { it.addSubscriber { showingEvent = true } }
+
+    companion object {
+        private val logger: Logger = loggerForClass<EventsSectionViewModel>()
+    }
 }
