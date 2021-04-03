@@ -37,54 +37,67 @@ class BasicEventViewModel(
     override val progress: Double
         get() = primaryTimers.currentSelection.value.progress
 
-    override val primaryTimers: NonNullSelectableList<TimerViewModel> = NonNullSelectableList(
-        model.primaryTimers.map {
-            TimerViewModel(it, 0, 2, true)
+    override val primaryTimers: NonNullSelectableList<TimerViewModel> by lazy {
+        NonNullSelectableList(
+            model.primaryTimers.map {
+                TimerViewModel(it, 0, 2, true)
+            }
+        ).also {
+            it.addSubscriber(this)
+            onNewTimerSelected(it.currentSelection.value)
         }
-    )
+    }
 
-    override val secondaryTimers: NonNullSelectableList<TimerViewModel>? = model.secondaryTimers?.map {
-        TimerViewModel(it, 1, 1, true)
-    }?.let(::NonNullSelectableList)
+    private inline val currentPrimaryTimer: TimerViewModel inline get() = primaryTimers.currentSelection.value
 
-    override var currentPageIndex: Int by primaryTimers::currentIndex
+    override val secondaryTimers: NonNullSelectableList<TimerViewModel>? by lazy {
+        model.secondaryTimers?.map {
+            TimerViewModel(it, 1, 1, true)
+        }?.let(::NonNullSelectableList)
+    }
+
+    var x = mutableMapOf<Int, Int>()
+    fun a() {
+        x[0] = 3
+    }
+
+    override var currentPageIndex: Int // cannot use property delegate here in order to avoid initializing primaryTimers
+        get() = primaryTimers.currentIndex
+        set(value) { primaryTimers.currentIndex = value }
+
     override var currentSecondaryTimerIndex: Int?
         get() = secondaryTimers?.currentIndex
         set(value) {
             require(secondaryTimers != null) { "No secondary timers to set index" }
-            require(value != null && value in secondaryTimers.indices) { "Invalid index." }
-            secondaryTimers.currentIndex = value
+            require(value != null && value in secondaryTimers!!.indices) { "Invalid index." }
+            secondaryTimers!!.currentIndex = value
         }
-
-    init {
-        primaryTimers.addSubscriber(this)
-        onNewTimerSelected()
-    }
 
     override fun update() {
         super.update()
 
-        onNewTimerSelected()
+        currentPrimaryTimer.let {
+            if (it != lastSelectedTimer) {
+                onNewTimerSelected(it)
+            }
+        }
 
         secondaryTimers?.mapIndexedNotNull { index, secondaryTimer ->
             with(model.secondaryTimerChangeStrategy) {
                 if (matches(secondaryTimer.speakers, primaryTimers.currentSelection.value.speakers)) index else null
             }
         }?.singleOrNull()?.let {
-            secondaryTimers.currentIndex = it
+            secondaryTimers!!.currentIndex = it
         }
     }
 
     private var lastSelectedTimer: TimerViewModel? = null
-    private fun onNewTimerSelected() {
+    private fun onNewTimerSelected(newTimer: TimerViewModel) {
 //        primaryTimers.forEach { it.removeSubscriber(this) }
-        lastSelectedTimer = primaryTimers.currentSelection.value.also { newTimer ->
-            if (newTimer != lastSelectedTimer) {
-                lastSelectedTimer?.isRunning = false
-                lastSelectedTimer?.removeSubscriber(this)
-                newTimer.addSubscriber(this)
-            }
-        }
+        lastSelectedTimer?.isRunning = false
+        lastSelectedTimer?.removeSubscriber(this)
+        newTimer.addSubscriber(this)
+        lastSelectedTimer = newTimer
     }
 
     @Suppress("UNUSED")

@@ -28,10 +28,12 @@ class TimerViewModel(
         countStrategySetting.addSubscriber(this)
     }
 
-    private val timer = Timer(
-        model.totalTime.timeSpan,
-        countStrategy.option
-    ).also { it.addSubscriber(this) }
+    private val timer by lazy {
+        Timer(
+            model.totalTime.timeSpan,
+            countStrategy.option
+        ).also { it.addSubscriber(this) }
+    }
 
     internal val totalTime = model.totalTime
     internal val speakers = model.speakers
@@ -43,7 +45,7 @@ class TimerViewModel(
     }
 
     val progress get() = timer.progress
-    var isRunning: Boolean by observationHandler.published(timer::isRunning, true)
+    var isRunning: Boolean by observationHandler.published({ timer::isRunning }, true)
 
     private val currentTime inline get() = timer.currentTime
 

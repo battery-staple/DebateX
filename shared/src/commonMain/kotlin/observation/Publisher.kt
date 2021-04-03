@@ -85,6 +85,14 @@ abstract class Publisher<in O : Observer> : Observable<O> {
             onlyPublishOnChange
         )
     }
+
+    inline fun <T> published(
+        noinline getDelegate: () -> KMutableProperty0<T>,
+        onlyPublishOnChange: Boolean = false,
+    ): PropertyDelegateProvider<Any?, ReadWriteProperty<Any?, T>> {
+        val delegate by lazy(getDelegate)
+        return published(delegate, onlyPublishOnChange)
+    }
 }
 
 open class WeakReferencePublisher<O : Observer> : Publisher<O>() {
