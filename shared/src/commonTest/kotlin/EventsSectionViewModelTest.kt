@@ -33,7 +33,10 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class TestKoin : Closeable {
     init {
@@ -48,7 +51,7 @@ class TestKoin : Closeable {
 }
 
 class EventsSectionViewModelTest : TestBase() {
-    var random: Random = Random(0)
+    private var random: Random = Random(0)
 
     @BeforeTest
     fun newTestRandom() {
@@ -81,26 +84,118 @@ class EventsSectionViewModelTest : TestBase() {
                 givenRandomEvents(numberOfSections)
                 givenEmptySettingsAccess()
 
-                assertEquals(numberOfSections, EventsSectionViewModel().events.size, "iteration=$iteration")
+                assertEquals(numberOfSections, EventsSectionViewModel().events.size)
             }
         }
     }
 
     @Test
-    fun givenRandomEvents_whenInitialized_noCardsShouldBeShowing(): Unit = TestKoin().use {
-        givenRandomEvents(random.nextInt(0..20))
+    fun givenRandomEvents_whenInitialized_shouldBeShowingNoCards() {
+        repeat(100) { iteration ->
+            TestKoin().use {
+                givenRandomEvents(iteration % 20)
 
-        EventsSectionViewModel().cards.forEach { card ->
-            assertEquals(false, card.showingInfo)
+                EventsSectionViewModel().cards.forEach { card ->
+                    assertEquals(false, card.showingInfo)
+                }
+            }
         }
     }
 
     @Test
-    fun givenRandomEvents_whenShowInfoCalled_onlyCardShouldBeShowing(): Unit = TestKoin().use {
-        givenRandomEvents(random.nextInt(0..20))
+    fun givenRandomEvents_whenOneCardShowingInfoSetToTrue_shouldBeShowingOnlyThatCard() {
+        repeat(100) { iteration ->
+            TestKoin().use {
+                givenRandomEvents(iteration % 20)
 
-        EventsSectionViewModel().cards.forEach { card ->
-            assertEquals(false, card.showingInfo)
+                val cards = EventsSectionViewModel().cards
+
+                cards.shuffled(random).forEach { card ->
+                    card.showingInfo = true
+
+                    assertEquals(card, cards.single { it.showingInfo })
+                }
+            }
+        }
+    }
+
+    @Test
+    fun givenRandomEvents_whenDistinctOpenCalled_shouldBeShowingEvent() {
+        repeat(100) { iteration ->
+            TestKoin().use {
+                givenRandomEvents(iteration % 20)
+
+                val viewModel = EventsSectionViewModel()
+
+                viewModel.cards.shuffled(random).forEach { card ->
+                    viewModel.showingEvent = false // what if this fails?
+                    card.open()
+
+                    assertEquals(true, viewModel.showingEvent)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun givenRandomEvents_whenSameOpenCalled_shouldBeShowingEvent() {
+        repeat(100) { iteration ->
+            TestKoin().use {
+                givenRandomEvents(iteration % 20)
+
+                val viewModel = EventsSectionViewModel()
+
+                viewModel.cards.shuffled(random).forEach { card ->
+                    viewModel.showingEvent = false // what if this fails?
+
+                    card.open()
+
+                    assertTrue(viewModel.showingEvent)
+
+                    card.open()
+
+                    assertTrue(viewModel.showingEvent)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun givenRandomEvents_whenDistinctOpenCalled_shouldHaveDifferentEvent() {
+        repeat(100) { iteration ->
+            TestKoin().use {
+                givenRandomEvents(iteration % 20)
+
+                val viewModel = EventsSectionViewModel()
+
+                viewModel.cards.shuffled(random).forEach { card ->
+                    val previousEvent = viewModel.currentEvent
+
+                    card.open()
+
+                    assertNotNull(viewModel.currentEvent)
+                    assertNotEquals(previousEvent, viewModel.currentEvent)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun givenRandomEvents_whenSameOpenCalled_shouldHaveSameEvent() {
+        repeat(100) { iteration ->
+            TestKoin().use {
+                givenRandomEvents(iteration % 20)
+
+                val viewModel = EventsSectionViewModel()
+
+                viewModel.cards.shuffled(random).forEach { card ->
+                    card.open()
+                    val previousEvent = viewModel.currentEvent
+                    card.open()
+
+                    assertEquals(previousEvent, viewModel.currentEvent)
+                }
+            }
         }
     }
 
