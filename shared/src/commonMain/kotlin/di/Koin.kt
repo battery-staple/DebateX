@@ -15,6 +15,8 @@ import com.rohengiralt.debatex.model.timerModel.TimerModel
 import com.rohengiralt.debatex.model.timerModel.wrap
 import com.rohengiralt.debatex.settings.SettingsAccess
 import com.rohengiralt.debatex.settings.settingsStore.RusshwolfSettingsStoreAdapter
+import com.rohengiralt.debatex.viewModel.BasicTimerViewModel
+import com.rohengiralt.debatex.viewModel.TimerViewModel
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.invoke
 import com.soywiz.klock.minutes
@@ -24,7 +26,7 @@ import org.koin.dsl.module
 fun initKoin() {
     startKoin {
         logger(KoinLoggerAdapter(Logger("Koin")))
-        modules(models, settingsAccess)
+        modules(models, settingsAccess, viewModels)
     }
 }
 
@@ -87,489 +89,495 @@ private val models = module {
 //                ),
 //                secondaryTimerChangeStrategy = SecondaryTimerChangeStrategy.All
 //            ),
-            EventModel(
-                format = DebateFormat.LincolnDouglas,
-                tags = EventTags(
-                    organization = Organization.NSDA,
+                EventModel(
+                    format = DebateFormat.LincolnDouglas,
+                    tags = EventTags(
+                        organization = Organization.NSDA,
 
-                    ),
-                type = OneVOneSpeaker,
-                primaryTimers = listOf(
-                    TimerModel(
-                        ShortenableName(
-                            "Affirmative Constructive",
-                            "AC"
                         ),
-                        6.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Negative Cross-Examination",
-                            "NCX"
+                    type = OneVOneSpeaker,
+                    primaryTimers = listOf(
+                        TimerModel(
+                            ShortenableName(
+                                "Affirmative Constructive",
+                                "AC"
+                            ),
+                            6.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
                         ),
-                        3.minutes.wrap(),
-                        OneVOneSpeaker.Both
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Negative Constructive/First Rebuttal",
-                            "NC/1NR"
+                        TimerModel(
+                            ShortenableName(
+                                "Negative Cross-Examination",
+                                "NCX"
+                            ),
+                            3.minutes.wrap(),
+                            OneVOneSpeaker.Both
                         ),
-                        7.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Affirmative Cross-Examination",
-                            "ACX"
+                        TimerModel(
+                            ShortenableName(
+                                "Negative Constructive/First Rebuttal",
+                                "NC/1NR"
+                            ),
+                            7.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
                         ),
-                        3.minutes.wrap(),
-                        OneVOneSpeaker.Both
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "First Affirmative Rebuttal",
-                            "1AR"
+                        TimerModel(
+                            ShortenableName(
+                                "Affirmative Cross-Examination",
+                                "ACX"
+                            ),
+                            3.minutes.wrap(),
+                            OneVOneSpeaker.Both
                         ),
-                        4.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Second Negative Rebuttal",
-                            "2NR"
+                        TimerModel(
+                            ShortenableName(
+                                "First Affirmative Rebuttal",
+                                "1AR"
+                            ),
+                            4.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
                         ),
-                        6.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Second Affirmative Rebuttal",
-                            "2AR"
+                        TimerModel(
+                            ShortenableName(
+                                "Second Negative Rebuttal",
+                                "2NR"
+                            ),
+                            6.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
                         ),
-                        3.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    )
+                        TimerModel(
+                            ShortenableName(
+                                "Second Affirmative Rebuttal",
+                                "2AR"
+                            ),
+                            3.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
+                        )
+                    ),
+                    secondaryTimers = listOf(
+                        TimerModel(
+                            ShortenableName("Aff Prep", "Aff"),
+                            4.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
+                        ),
+                        TimerModel(
+                            ShortenableName("Neg Prep", "Neg"),
+                            4.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
+                        )
+                    ),
+                    secondaryTimerChangeStrategy = SecondaryTimerChangeStrategy.All
                 ),
-                secondaryTimers = listOf(
-                    TimerModel(
-                        ShortenableName("Aff Prep", "Aff"),
-                        4.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
+                EventModel(
+                    format = DebateFormat.LincolnDouglas,
+                    tags = EventTags(
+                        organization = Organization.NSDA,
+                        region = Region.National,
                     ),
-                    TimerModel(
-                        ShortenableName("Neg Prep", "Neg"),
-                        4.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    )
+                    type = OneVOneSpeaker,
+                    primaryTimers = listOf(
+                        TimerModel(
+                            ShortenableName(
+                                "Affirmative Constructive",
+                                "AC"
+                            ),
+                            6.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Negative Cross-Examination",
+                                "NCX"
+                            ),
+                            3.minutes.wrap(),
+                            OneVOneSpeaker.Both
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Negative Constructive/First Rebuttal",
+                                "NC/1NR"
+                            ),
+                            7.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Affirmative Cross-Examination",
+                                "ACX"
+                            ),
+                            3.minutes.wrap(),
+                            OneVOneSpeaker.Both
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "First Affirmative Rebuttal",
+                                "1AR"
+                            ),
+                            4.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Second Negative Rebuttal",
+                                "2NR"
+                            ),
+                            6.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Second Affirmative Rebuttal",
+                                "2AR"
+                            ),
+                            3.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
+                        )
+                    ),
+                    secondaryTimers = listOf(
+                        TimerModel(
+                            ShortenableName("Aff Prep", "Aff"),
+                            5.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
+                        ),
+                        TimerModel(
+                            ShortenableName("Neg Prep", "Neg"),
+                            5.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
+                        )
+                    ),
+                    secondaryTimerChangeStrategy = SecondaryTimerChangeStrategy.All
                 ),
-                secondaryTimerChangeStrategy = SecondaryTimerChangeStrategy.All
-            ),
-            EventModel(
-                format = DebateFormat.LincolnDouglas,
-                tags = EventTags(
-                    organization = Organization.NSDA,
-                    region = Region.National,
+                EventModel(
+                    format = DebateFormat.PublicForum,
+                    tags = EventTags(organization = Organization.NSDA),
+                    type = TwoVTwoSpeaker,
+                    primaryTimers = listOf(
+                        TimerModel(
+                            ShortenableName(
+                                "Team A Constructive",
+                                "AC"
+                            ),
+                            6.minutes.wrap(),
+                            speakers = setOf(TwoVTwoSpeaker.TeamOneFirstSpeaker)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Team B Constructive",
+                                "BC"
+                            ),
+                            3.minutes.wrap(),
+                            speakers = setOf(TwoVTwoSpeaker.TeamTwoFirstSpeaker)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "First Speakers' Crossfire",
+                                "1CX"
+                            ),
+                            7.minutes.wrap(),
+                            speakers = TwoVTwoSpeaker.FirstSpeakers
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Team A Rebuttal",
+                                "AR"
+                            ),
+                            4.minutes.wrap(),
+                            speakers = setOf(TwoVTwoSpeaker.TeamOneSecondSpeaker)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Team B Rebuttal",
+                                "BR"
+                            ),
+                            6.minutes.wrap(),
+                            speakers = setOf(TwoVTwoSpeaker.TeamTwoSecondSpeaker)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Second Speakers' Crossfire",
+                                "2CX"
+                            ),
+                            3.minutes.wrap(),
+                            speakers = TwoVTwoSpeaker.SecondSpeakers
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Team A Summary",
+                                "AS"
+                            ),
+                            3.minutes.wrap(),
+                            speakers = setOf(TwoVTwoSpeaker.TeamOneFirstSpeaker)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Team B Summary",
+                                "BS"
+                            ),
+                            3.minutes.wrap(),
+                            speakers = setOf(TwoVTwoSpeaker.TeamTwoFirstSpeaker)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Grand Crossfire",
+                                "GC"
+                            ),
+                            3.minutes.wrap(),
+                            speakers = TwoVTwoSpeaker.AllSpeakers
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Team A Final Focus",
+                                "AFF"
+                            ),
+                            3.minutes.wrap(),
+                            speakers = setOf(TwoVTwoSpeaker.TeamOneSecondSpeaker)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Team B Final Focus",
+                                "BFF"
+                            ),
+                            3.minutes.wrap(),
+                            speakers = setOf(TwoVTwoSpeaker.TeamTwoSecondSpeaker)
+                        )
+                    ),
+                    secondaryTimers = listOf(
+                        TimerModel(
+                            ShortenableName("Team A Prep", "Team A"),
+                            2.minutes.wrap(),
+                            TwoVTwoSpeaker.TeamOne
+                        ),
+                        TimerModel(
+                            ShortenableName("Team B Prep", "Team A"),
+                            2.minutes.wrap(),
+                            TwoVTwoSpeaker.TeamTwo
+                        )
+                    ),
+                    secondaryTimerChangeStrategy = SecondaryTimerChangeStrategy.Any
                 ),
-                type = OneVOneSpeaker,
-                primaryTimers = listOf(
-                    TimerModel(
-                        ShortenableName(
-                            "Affirmative Constructive",
-                            "AC"
+                EventModel(
+                    format = DebateFormat.BigQuestions,
+                    tags = EventTags(organization = Organization.NSDA),
+                    type = OneVOneSpeaker,
+                    primaryTimers = listOf(
+                        TimerModel(
+                            ShortenableName(
+                                "Affirmative Constructive",
+                                "ACT",
+                            ),
+                            5.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
                         ),
-                        6.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
+                        TimerModel(
+                            ShortenableName(
+                                "Negative Constructive",
+                                "NCT",
+                            ),
+                            5.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Question Segment",
+                                "1QS",
+                            ),
+                            3.minutes.wrap(),
+                            OneVOneSpeaker.Both
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Affirmative Rebuttal",
+                                "ARB",
+                            ),
+                            4.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Negative Rebuttal",
+                                "NRB",
+                            ),
+                            4.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Second Question Segment",
+                                "NRB",
+                            ),
+                            3.minutes.wrap(),
+                            OneVOneSpeaker.Both
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Affirmative Consolidation",
+                                "ACS",
+                            ),
+                            3.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Negative Consolidation",
+                                "NCS",
+                            ),
+                            3.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Affirmative Rationale",
+                                "ARL",
+                            ),
+                            3.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
+                        ),
+                        TimerModel(
+                            ShortenableName(
+                                "Negative Rationale",
+                                "NRL",
+                            ),
+                            3.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
+                        )
                     ),
-                    TimerModel(
-                        ShortenableName(
-                            "Negative Cross-Examination",
-                            "NCX"
+                    secondaryTimers = listOf(
+                        TimerModel(
+                            ShortenableName("Aff Prep", "Aff"),
+                            3.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
                         ),
-                        3.minutes.wrap(),
-                        OneVOneSpeaker.Both
+                        TimerModel(
+                            ShortenableName("Neg Prep", "Neg"),
+                            3.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
+                        )
                     ),
-                    TimerModel(
-                        ShortenableName(
-                            "Negative Constructive/First Rebuttal",
-                            "NC/1NR"
-                        ),
-                        7.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Affirmative Cross-Examination",
-                            "ACX"
-                        ),
-                        3.minutes.wrap(),
-                        OneVOneSpeaker.Both
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "First Affirmative Rebuttal",
-                            "1AR"
-                        ),
-                        4.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Second Negative Rebuttal",
-                            "2NR"
-                        ),
-                        6.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Second Affirmative Rebuttal",
-                            "2AR"
-                        ),
-                        3.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    )
+                    secondaryTimerChangeStrategy = SecondaryTimerChangeStrategy.All
                 ),
-                secondaryTimers = listOf(
-                    TimerModel(
-                        ShortenableName("Aff Prep", "Aff"),
-                        5.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    ),
-                    TimerModel(
-                        ShortenableName("Neg Prep", "Neg"),
-                        5.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    )
-                ),
-                secondaryTimerChangeStrategy = SecondaryTimerChangeStrategy.All
-            ),
-            EventModel(
-                format = DebateFormat.PublicForum,
-                tags = EventTags(organization = Organization.NSDA),
-                type = TwoVTwoSpeaker,
-                primaryTimers = listOf(
-                    TimerModel(
-                        ShortenableName(
-                            "Team A Constructive",
-                            "AC"
+                EventModel(
+                    format = DebateFormat.Policy,
+                    tags = EventTags(organization = Organization.NSDA),
+                    type = OneVOneSpeaker,
+                    primaryTimers = listOf(
+                        TimerModel(
+                            ShortenableName(
+                                "First Affirmative Constructive",
+                                "1AC"
+                            ),
+                            8.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
                         ),
-                        6.minutes.wrap(),
-                        speakers = setOf(TwoVTwoSpeaker.TeamOneFirstSpeaker)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Team B Constructive",
-                            "BC"
+                        TimerModel(
+                            ShortenableName("Negative Cross-Examination",
+                                "1NCX"
+                            ),
+                            3.minutes.wrap(),
+                            OneVOneSpeaker.Both
                         ),
-                        3.minutes.wrap(),
-                        speakers = setOf(TwoVTwoSpeaker.TeamTwoFirstSpeaker)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "First Speakers' Crossfire",
-                            "1CX"
+                        TimerModel(
+                            ShortenableName(
+                                "First Negative Constructive",
+                                "1NC"
+                            ),
+                            8.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
                         ),
-                        7.minutes.wrap(),
-                        speakers = TwoVTwoSpeaker.FirstSpeakers
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Team A Rebuttal",
-                            "AR"
+                        TimerModel(
+                            ShortenableName(
+                                "Affirmative Cross-Examination",
+                                "1ACX"
+                            ),
+                            3.minutes.wrap(),
+                            OneVOneSpeaker.Both
                         ),
-                        4.minutes.wrap(),
-                        speakers = setOf(TwoVTwoSpeaker.TeamOneSecondSpeaker)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Team B Rebuttal",
-                            "BR"
+                        TimerModel(
+                            ShortenableName(
+                                "Second Affirmative Constructive",
+                                "2AC"
+                            ),
+                            8.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
                         ),
-                        6.minutes.wrap(),
-                        speakers = setOf(TwoVTwoSpeaker.TeamTwoSecondSpeaker)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Second Speakers' Crossfire",
-                            "2CX"
+                        TimerModel(
+                            ShortenableName(
+                                "Negative Cross-Examination",
+                                "2NCX"
+                            ),
+                            3.minutes.wrap(),
+                            OneVOneSpeaker.Both
                         ),
-                        3.minutes.wrap(),
-                        speakers = TwoVTwoSpeaker.SecondSpeakers
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Team A Summary",
-                            "AS"
+                        TimerModel(
+                            ShortenableName(
+                                "Negative Cross-Examination",
+                                "2NC"
+                            ),
+                            3.minutes.wrap(),
+                            OneVOneSpeaker.Both
                         ),
-                        3.minutes.wrap(),
-                        speakers = setOf(TwoVTwoSpeaker.TeamOneFirstSpeaker)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Team B Summary",
-                            "BS"
+                        TimerModel(
+                            ShortenableName(
+                                "Affirmative Cross-Examination",
+                                "2ACX"
+                            ),
+                            3.minutes.wrap(),
+                            OneVOneSpeaker.Both
                         ),
-                        3.minutes.wrap(),
-                        speakers = setOf(TwoVTwoSpeaker.TeamTwoFirstSpeaker)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Grand Crossfire",
-                            "GC"
+                        TimerModel(
+                            ShortenableName(
+                                "First Negative Rebuttal",
+                                "1NR"
+                            ),
+                            5.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
                         ),
-                        3.minutes.wrap(),
-                        speakers = TwoVTwoSpeaker.AllSpeakers
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Team A Final Focus",
-                            "AFF"
+                        TimerModel(
+                            ShortenableName(
+                                "First Affirmative Rebuttal",
+                                "1AR"
+                            ),
+                            5.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
                         ),
-                        3.minutes.wrap(),
-                        speakers = setOf(TwoVTwoSpeaker.TeamOneSecondSpeaker)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Team B Final Focus",
-                            "BFF"
+                        TimerModel(
+                            ShortenableName(
+                                "Second Negative Rebuttal",
+                                "2NR"
+                            ),
+                            5.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
                         ),
-                        3.minutes.wrap(),
-                        speakers = setOf(TwoVTwoSpeaker.TeamTwoSecondSpeaker)
-                    )
-                ),
-                secondaryTimers = listOf(
-                    TimerModel(
-                        ShortenableName("Team A Prep", "Team A"),
-                        2.minutes.wrap(),
-                        TwoVTwoSpeaker.TeamOne
-                    ),
-                    TimerModel(
-                        ShortenableName("Team B Prep", "Team A"),
-                        2.minutes.wrap(),
-                        TwoVTwoSpeaker.TeamTwo
-                    )
-                ),
-                secondaryTimerChangeStrategy = SecondaryTimerChangeStrategy.Any
-            ),
-            EventModel(
-                format = DebateFormat.BigQuestions,
-                tags = EventTags(organization = Organization.NSDA),
-                type = OneVOneSpeaker,
-                primaryTimers = listOf(
-                    TimerModel(
-                        ShortenableName(
-                            "Affirmative Constructive",
-                            "ACT",
+                        TimerModel(
+                            ShortenableName(
+                                "Second Affirmative Rebuttal",
+                                "1NR"
+                            ),
+                            5.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
                         ),
-                        5.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
                     ),
-                    TimerModel(
-                        ShortenableName(
-                            "Negative Constructive",
-                            "NCT",
+                    secondaryTimers = listOf(
+                        TimerModel(
+                            ShortenableName("Aff Prep", "Aff"),
+                            5.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Aff)
                         ),
-                        5.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
+                        TimerModel(
+                            ShortenableName("Neg Prep", "Aff"),
+                            5.minutes.wrap(),
+                            setOf(OneVOneSpeaker.Neg)
+                        )
                     ),
-                    TimerModel(
-                        ShortenableName(
-                            "Question Segment",
-                            "1QS",
-                        ),
-                        3.minutes.wrap(),
-                        OneVOneSpeaker.Both
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Affirmative Rebuttal",
-                            "ARB",
-                        ),
-                        4.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Negative Rebuttal",
-                            "NRB",
-                        ),
-                        4.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Second Question Segment",
-                            "NRB",
-                        ),
-                        3.minutes.wrap(),
-                        OneVOneSpeaker.Both
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Affirmative Consolidation",
-                            "ACS",
-                        ),
-                        3.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Negative Consolidation",
-                            "NCS",
-                        ),
-                        3.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Affirmative Rationale",
-                            "ARL",
-                        ),
-                        3.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Negative Rationale",
-                            "NRL",
-                        ),
-                        3.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    )
-                ),
-                secondaryTimers = listOf(
-                    TimerModel(
-                        ShortenableName("Aff Prep", "Aff"),
-                        3.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    ),
-                    TimerModel(
-                        ShortenableName("Neg Prep", "Neg"),
-                        3.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    )
-                ),
-                secondaryTimerChangeStrategy = SecondaryTimerChangeStrategy.All
-            ),
-            EventModel(
-                format = DebateFormat.Policy,
-                tags = EventTags(organization = Organization.NSDA),
-                type = OneVOneSpeaker,
-                primaryTimers = listOf(
-                    TimerModel(
-                        ShortenableName(
-                            "First Affirmative Constructive",
-                            "1AC"
-                        ),
-                        8.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    ),
-                    TimerModel(
-                        ShortenableName("Negative Cross-Examination",
-                            "1NCX"
-                        ),
-                        3.minutes.wrap(),
-                        OneVOneSpeaker.Both
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "First Negative Constructive",
-                            "1NC"
-                        ),
-                        8.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Affirmative Cross-Examination",
-                            "1ACX"
-                        ),
-                        3.minutes.wrap(),
-                        OneVOneSpeaker.Both
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Second Affirmative Constructive",
-                            "2AC"
-                        ),
-                        8.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Negative Cross-Examination",
-                            "2NCX"
-                        ),
-                        3.minutes.wrap(),
-                        OneVOneSpeaker.Both
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Negative Cross-Examination",
-                            "2NC"
-                        ),
-                        3.minutes.wrap(),
-                        OneVOneSpeaker.Both
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Affirmative Cross-Examination",
-                            "2ACX"
-                        ),
-                        3.minutes.wrap(),
-                        OneVOneSpeaker.Both
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "First Negative Rebuttal",
-                            "1NR"
-                        ),
-                        5.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "First Affirmative Rebuttal",
-                            "1AR"
-                        ),
-                        5.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Second Negative Rebuttal",
-                            "2NR"
-                        ),
-                        5.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    ),
-                    TimerModel(
-                        ShortenableName(
-                            "Second Affirmative Rebuttal",
-                            "1NR"
-                        ),
-                        5.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    ),
-                ),
-                secondaryTimers = listOf(
-                    TimerModel(
-                        ShortenableName("Aff Prep", "Aff"),
-                        5.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Aff)
-                    ),
-                    TimerModel(
-                        ShortenableName("Neg Prep", "Aff"),
-                        5.minutes.wrap(),
-                        setOf(OneVOneSpeaker.Neg)
-                    )
-                ),
-                secondaryTimerChangeStrategy = SecondaryTimerChangeStrategy.All
+                    secondaryTimerChangeStrategy = SecondaryTimerChangeStrategy.All
+                )
             )
         )
-        )
+    }
+}
+
+private val viewModels = module {
+    factory<TimerViewModel> { (model: TimerModel<*>, displayConfiguration: TimerViewModel.DisplayConfiguration) ->
+        BasicTimerViewModel(model, displayConfiguration)
     }
 }
 

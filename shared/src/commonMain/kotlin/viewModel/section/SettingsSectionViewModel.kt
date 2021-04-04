@@ -33,7 +33,7 @@ fun <V> registerSetting(
             val newSettingModel = SettingModel(name, null, type)
 
             applicationSettings = if (::applicationSettings.isInitialized) {
-                applicationSettings.copy(settings = applicationSettings.settings + newSettingModel)
+                applicationSettings.copy(settings = applicationSettings.settings.filter { it.name != newSettingModel.name } + newSettingModel)
             } else {
                 SettingsSectionModel(newSettingModel)
             }
@@ -48,19 +48,6 @@ object SettingsSectionViewModel : ViewModel(), KoinComponent {
     private val settingsAccess: SettingsAccess by inject()
 
     internal val model: SettingsSectionModel by lazy { applicationSettings } // static initialization order may cause a problem here
-//        SettingsSectionModel( //TODO: get from storage/inject
-//            SettingModel(
-//                "Timers Count",
-//                null,
-//                SettingModel.SettingOptions.MultipleChoice(
-//                    MultipleChoiceOption("Down",
-//                        TimerCountStrategy.CountDown),
-//                    MultipleChoiceOption("Up", TimerCountStrategy.CountUp),
-//                    initialIndex = 0,
-//                    serializer = TimerCountStrategy.serializer()
-//                )
-//            )
-//        )
 
     private val modelsToSettings: MutableMap<SettingModel<*>, SettingsAccess.Setting<*>> =
         mutableMapOf() // Implicit contract: type parameters of SettingModel and Setting are the same

@@ -2,6 +2,8 @@ package com.rohengiralt.debatex.settings
 
 import com.rohengiralt.debatex.random.randomStringList
 import com.rohengiralt.debatex.settings.settingsStore.SettingsStore
+import org.koin.core.context.loadKoinModules
+import org.koin.dsl.module
 
 private val allAlphanumerics = (('A'..'Z') + ('a'..'z') + ('0'..'9')).toSet()
 
@@ -53,4 +55,14 @@ class FakeSettingsStore(val state: MutableMap<String, Any> = mutableMapOf()) : S
     override fun removeAll() {
         state.clear()
     }
+}
+
+fun givenEmptySettingsAccess() {
+    loadKoinModules(
+        module {
+            single {
+                SettingsAccess(FakeSettingsStore())
+            }
+        }
+    )
 }

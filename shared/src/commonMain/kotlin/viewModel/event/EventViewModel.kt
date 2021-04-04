@@ -10,6 +10,9 @@ import com.rohengiralt.debatex.viewModel.ViewModel
 import com.rohengiralt.debatex.viewModel.event.linearHueChange.LinearHueChange
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.parameter.parametersOf
 
 
 abstract class EventViewModel : ViewModel() {
@@ -29,8 +32,7 @@ abstract class EventViewModel : ViewModel() {
 
 class BasicEventViewModel(
     private val model: EventModel<*>,
-) : EventViewModel() {
-
+) : EventViewModel(), KoinComponent {
     override val title: String get() = model.format.name.longName + " " + model.tags.joinToString(separator = " ") { "(${it.representableName})" }
 
     override val progress: Double
@@ -39,8 +41,11 @@ class BasicEventViewModel(
     override val primaryTimers: NonNullSelectableList<TimerViewModel> by lazy {
         NonNullSelectableList(
             model.primaryTimers.map {
-                TimerViewModel(it, 0, 2, true)
+                get<TimerViewModel> {
+                    parametersOf(it, TimerViewModel.DisplayConfiguration(0, 2))
+                }
             }
+
         ).also {
             it.addSubscriber(this)
             onNewTimerSelected(it.currentSelection.value)
@@ -50,9 +55,12 @@ class BasicEventViewModel(
     private inline val currentPrimaryTimer: TimerViewModel inline get() = primaryTimers.currentSelection.value
 
     override val secondaryTimers: NonNullSelectableList<TimerViewModel>? by lazy {
-        model.secondaryTimers?.map {
-            TimerViewModel(it, 1, 1, true)
-        }?.let(::NonNullSelectableList)
+        model.secondaryTimers
+            ?.let { if (it.isEmpty()) null else it }
+            ?.map {
+                get<TimerViewModel> { parametersOf(it, TimerViewModel.DisplayConfiguration(1, 1)) }
+            }
+            ?.let(::NonNullSelectableList)
     }
 
     override var currentPageIndex: Int // cannot use property delegate here in order to avoid initializing primaryTimers
